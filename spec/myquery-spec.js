@@ -43,7 +43,7 @@ describe("myQuery", function () {
       expect(elem.className).toEqual('noice');
     });
 
-    xit("selects elements by class name", function() {
+    it("selects elements by class name", function() {
       var buttons = $('.button');
       expect(buttons.get(0).className).toMatch(/first/);
       expect(buttons.get(1).className).toMatch(/second/);
@@ -74,20 +74,38 @@ describe("myQuery", function () {
       expect(testResult[0]).toEqual("button first 0");
       expect(testResult[1]).toEqual("button second 1");
     });
-  })
+  });
 
   describe("Show and Hide", function () {
-    // TODO: Write tests for .show() and .hide()
+    it("Hide hides the selected property", function(){
+      expect( $('.button').get(0).hide().style.display ).toEqual("none");
+    });
+
+    it("Show shows the selected property", function(){
+      expect( $('.button').get(0).show().style.display ).toEqual("");
+    });
   });
 
   describe("addClass", function () {
-    // TODO: Write tests for addClass
-    // HINT: Test using .toMatch() like the selector test
+    it("adds the given class to the object", function(){
+      var klass = 'myKlass';
+      var button = $('.button').get(0);
+      expect( button.addClass(klass).className ).toMatch(/myKlass/);
+    });
+  });
+
+  describe("removeClass", function () {
+    it("removes the given class from the object", function(){
+      var klass = 'myKlass';
+      var button = $('.button').get(0);
+      button.addClass(klass);
+      expect( button.className ).toMatch(/myKlass/);
+      expect( button.removeClass(klass).className ).not.toMatch(/myKlass/);
+    });
   });
 
   describe("Modifying CSS", function () {
-
-    xit("can set a single property", function() {
+    it("can set a single property", function() {
       // Ensure they're not already hidden
       expect( $('.button').get(0).style.display ).toEqual('');
       expect( $('.button').get(1).style.display ).toEqual('');
@@ -98,8 +116,12 @@ describe("myQuery", function () {
       expect( $('.button').get(1).style.display ).toEqual('none');
     });
 
-    // TODO: (`it` without a function are pending tests)
-    it("can set multiple properties in one call");
+    it("can set multiple properties in one call", function(){
+      $('#profile').css({'height': '200px', 'width': '300px'});
+
+      expect( $('#profile').style.height ).toEqual('200px');
+      expect( $('#profile').style.width ).toEqual('300px');
+    });
   });
 
 });

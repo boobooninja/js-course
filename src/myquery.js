@@ -1,44 +1,90 @@
 (function () {
 
   var QueryWrapper = function (elems) {
+    this.elems = elems;
     this.get = function(index) {
-      console.log("index: " + index);
-      console.log("elems: " + elems);
-      console.log("what is elems[index]", elems[index]);
-      return elems[index];
+      return new QueryWrapper( [ this.elems[index] ] );
     };
-    this.length = elems.length;
+    this.length = this.elems.length;
     this.each = function(func) {
-      for(var i = 0; i < elems.length; i++) {
-        func(elems[i],i);
+      for(var i = 0; i < this.elems.length; i++) {
+        func(this.elems[i],i);
       }
-      return elems;
+      return this.elems;
     };
+    this.hide = function() {
+      this.each(function(element, i){
+        element.style.display = "none";
+      });
+      return this;
+    };
+    this.show = function() {
+      this.each(function(element, i){
+        element.style.display = "";
+      });
+      return this;
+    };
+    this.addClass = function(someClass) {
+      thisQW = this;
+      thisQW.each(function(element,i){
+        element.classList.add(someClass);
+        thisQW.className = element.className;
+      });
+      return this;
+    };
+    this.removeClass = function(someClass) {
+      thisQW = this;
+      thisQW.each(function(element,i){
+        element.classList.remove(someClass);
+        thisQW.className = element.className;
+      });
+      return this;
+    };
+    this.css = function(property, value) {
+      this.each(function(element, i){
+        if(typeof(property) === 'object') {
+          for (var attrname in property) {
+            element.style[attrname] = property[attrname];
+          }
+        } else {
+          element.style[property] = value;
+        }
+      });
+      return this;
+    };
+    this.getStyle = function(length){
+      if (length === 1) {
+        return this.elems[0].style;
+      } else {
+        return undefined;
+      }
+    };
+    this.style = this.getStyle(this.length);
+    this.getClassName = function(length){
+      if (length === 1) {
+        return this.elems[0].className;
+      } else {
+        return undefined;
+      }
+    };
+    this.className = this.getClassName(this.length);
   };
 
   var myQuery = function (selector) {
     var operator = selector.slice(0, 1);
     var option = selector.slice(1, selector.length);
     var elems;
-console.log("operator: " + operator);
-console.log("option: " + option);
 
     switch(operator) {
       case '.':
-        // code (use option)
         elems = document.getElementsByClassName(option);
-        console.log(". elems: " + elems);
         break;
       case '#':
-        // code (use option)
         item = document.getElementById(option);
         if(item === null) {elems = [];} else {elems = [item];}
-        console.log("# elems: " + elems);
         break;
       default:
-        // code (use selector)
         elems = document.getElementsByTagName(selector);
-        console.log("? elems: " + elems);
     }
     return new QueryWrapper(elems);
   };
