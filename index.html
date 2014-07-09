@@ -5,15 +5,27 @@
 </head>
 <body>
 
-<!-- HTML -->
+  <!-- HTML -->
+  <div id="store">
+    <form action="#" id="newItem">
+      <label for="name">Name:</label><input type="text" id="name">
+      <label for="price">Price:</label><input type="text" id="price">
+      <button>Submit</button>
+    </form>
+  </div>
 
-<div id="templates">
-  <!-- TEMPLATES -->
-</div>
+  <div id="templates">
+    <!-- TEMPLATES -->
+    <script type="text/template" id="item">
+      <div class="item">
+        <p>{{name}} - {{price}}</p>
+      </div>
+    </script>
+  </div>
 
-<script src="vendor/js/jquery-1.10.2.min.js"></script>
-<script src="vendor/js/robin.js"></script>
-<script src="js/main.js"></script>
+  <script src="vendor/js/jquery-1.10.2.min.js"></script>
+  <script src="vendor/js/robin.js"></script>
+  <script src="js/main.js"></script>
 
 </body>
 </html>
