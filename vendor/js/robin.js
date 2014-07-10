@@ -20,8 +20,10 @@
       this.events[eventName].push(callbackFunction);
     },
     trigger: function(eventName){
+      var i, l, args;
+      args = Array.prototype.slice.call(arguments, 1);
       for(var i = 0, l = this.events[eventName].length; i < l; i++){
-        this.events[eventName][i]();
+        this.events[eventName][i].apply(null, args);
       }
     }
   }
