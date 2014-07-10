@@ -7,22 +7,31 @@
 
   <div id="video-display"></div>
   <div id="video-list"></div>
+  <div id="genre-stats"></div>
 
   <form id="new-video">
     <!-- TODO: 2 inputs, 1 button -->
     <label for="title">Title: </label><input type="text" id="title">
     <label for="youtubeId">YouTube ID: </label><input type="text" id="youtubeId">
+    <label for="genre">Genre: </label><input type="text" id="genre">
     <button>Submit</button>
   </form>
 
 
   <div id="templates">
-    <!-- TODO: video-list-item template -->
+
     <script type="text/template" id="video-list-item">
       <div id="video-list-item">
         <h3><a href="https://www.youtube.com/watch?v={{youtubeId}}">{{title}}</a></h3>
       </div>
     </script>
+
+    <script type="text/template" id="genre-item">
+      <div id="genre-item">
+        <p>The {{genre}} genre has {{count}} video(s).</p>
+      </div>
+    </script>
+
   </div>
 
   <script src="vendor/js/jquery-1.10.2.min.js"></script>
