@@ -10,10 +10,14 @@
   background: #0f0;
 }
 
-.snape, .dumbledore {
+.names div {
   clear: both;
   margin-top: 60px;
   font-size: 2em;
 }
 
 .dumbledore { font-size: 4em; }
+
+.ron { font-size: 5em; }
+
+.hermione { font-size: 6em; }

@@ -30,4 +30,21 @@
     $('.dumbledore').text(phrase);
   });
 
+
+  clock.on('tick', function () {
+    if (clock.totalTickCount % 8 === 0) {
+      $('.ron').text('Ron Weasley!');
+    } else {
+      $('.ron').text('');
+    }
+  });
+
+  clock.on('tick', function () {
+    if (clock.totalTickCount % 16 === 0) {
+      $('.hermione').text('Hermione!!!');
+    } else {
+      $('.hermione').text('');
+    }
+  });
+
 })();
