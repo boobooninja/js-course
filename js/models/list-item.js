@@ -8,16 +8,24 @@
     Robin.extend(this, Robin.Events);
 
     this.create = function (listItem) {
-      // TODO
+      items.push(listItem);
+      this.trigger('create', listItem);
     };
 
     this.destroy = function (index) {
-      // TODO
+      var item = items.splice(index,1);
+      this.trigger('destroy', index);
     };
 
     this.update = function (index, name, priority) {
+      console.log('in the list-item update');
       // TODO EXTENSION
-      this.trigger('update', items[index], index);
+      var item = items[index];
+      item.name = name;
+      item.priority = priority;
+      items[index] = item;
+
+      this.trigger('update', item, index);
     };
 
   };

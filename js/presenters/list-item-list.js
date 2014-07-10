@@ -24,13 +24,22 @@
     listItems.destroy(index);
   });
 
-  /*/ DELETE THIS LINE FOR THE EXTENSION
   // When the user clicks the edit button, toggle the 'edit' css
   // class; the css does all the heavy lifting
   $view.on('click', ".list-item .edit", function () {
     $(this).closest('.list-item').toggleClass('edit');
   });
-  /**/
+
+  $view.on('click', ".list-item .save-edit", function(){
+    console.log('in the view save-edit');
+    console.log('closest', $(this).closest('.list-item'));
+
+    var listItem = $(this).closest('.list-item');
+    var itemIndex = listItem.index();
+    var name = listItem.find('.edit-name').val();
+    var category = listItem.find('.edit-category').val();
+    listItems.update(itemIndex, name, category);
+  });
 
 // - - - - - - - - - -
 // Model Interactions
@@ -50,11 +59,14 @@
     $('.list-item', $view).eq(itemIndex).remove();
   });
 
-  /*/ DELETE THIS LINE FOR THE EXTENSION
   // When we hear the 'update' event, that means a list item's data
   // has just updated. We need to update the page to reflect that,
   // as well as remove the 'edit' class so the edit form disappears
-  listItems.on(...);
-  /**/
+  listItems.on('update', function(item, itemIndex){
+    console.log('in the update trigger');
+    // var newListItemHtml = Robin.render(itemTemplate, item);
+    // $('.list-item', $view).eq(itemIndex).html(newListItemHtml);
+    // $('.list-item', $view).eq(itemIndex).toggleClass('edit');
+  });
 
 })();
