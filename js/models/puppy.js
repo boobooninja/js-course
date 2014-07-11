@@ -25,6 +25,7 @@
     // CRUD type functions
     this.create = function (pup) {
       pup.id = generateId();
+      pup.votes = 0;
       puppies.push(pup);
       this.trigger("create", pup);
     };
