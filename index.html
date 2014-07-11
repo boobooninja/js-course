@@ -21,14 +21,20 @@
   <div id="templates">
 
     <script type="text/template" id="video-list-item">
-      <div id="video-list-item">
-        <h3><a href="https://www.youtube.com/watch?v={{youtubeId}}">{{title}}</a></h3>
+      <div class="video-list-item">
+        <h3><a href="https://www.youtube.com/watch?v={{youtubeId}}" data-youtube-id={{youtubeId}}>{{title}}</a></h3>
       </div>
     </script>
 
     <script type="text/template" id="genre-item">
-      <div id="genre-item">
+      <div class="genre-item">
         <p>The {{genre}} genre has {{count}} video(s).</p>
+      </div>
+    </script>
+
+    <script type="text/template" id="video-embed">
+      <div class="video-embed">
+        <iframe width="560" height="315" src="http://www.youtube.com/embed/{{youtubeId}}" frameborder="0" allowfullscreen></iframe>
       </div>
     </script>
 

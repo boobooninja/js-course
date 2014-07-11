@@ -20,6 +20,19 @@
     renderVideoList();
   });
 
+  $(document).on('click', '.video-list-item a', function(e){
+    e.preventDefault();
+    var youtubeId = $(e.currentTarget).data('youtube-id');
+    console.log('Clicked on youtube video: ', youtubeId);
+    renderVideoDisplay(youtubeId);
+  });
+
+  var renderVideoDisplay = function(youtubeId) {
+    var videoDisplayTemplate = $('#templates #video-embed').html();
+    var renderedTemplate = Robin.render(videoDisplayTemplate, {youtubeId: youtubeId});
+    $('#video-display').html(renderedTemplate);
+  };
+
   var renderVideoList = function () {
     $('#video-list').empty();
     var videoTemplate = $('#templates #video-list-item').html();
