@@ -1,6 +1,8 @@
 require 'sinatra'
 require 'json'
 
+set :bind, "0.0.0.0"
+
 string = "Whosever room this is should be ashamed!\n"\
 		"His underwear is hanging on the lamp.\n"\
 		"His raincoat is there in the overstuffed chair,\n"\
