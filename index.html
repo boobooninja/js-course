@@ -1,63 +1,32 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <title>PupOrNot!</title>
+  <title>MV*</title>
   <link rel="stylesheet" type="text/css" href="css/style.css">
   <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet" />
   <script type="text/javascript"></script>
 </head>
 <body>
 
-  <h1>PupOrNot</h1>
+  <h1>MV*</h1>
 
-  <div id="stats"></div>
-
-  <h2>Click Image to Vote!</h2>
-  <!-- Create Form -->
-  <form class="new-puppy">
-    Name: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-    <input type="text" class="name" name="name" placeholder="Item Name (e.g. Cute Puppies)" autocomplete="off" value="cute dog 1" /></br>
-
-    Image URL: <input type="text" class="image" name="image" placeholder="" autocomplete="off" value="http://images4.fanpop.com/image/photos/14700000/So-cute-puppies-14749028-1600-1200.jpg"/>
-
-    <input type="submit" class="submit" value="Create!" />
-  </form>
-
-  <div id="puppy-showcase">
-    <!-- the root div mapped to $root in robin js -->
-  </div>
+  <div id="here"></div>
 
   <!-- Templates -->
-
-
-
   <div id="templates">
-    <script type="text/template" class="puppy">
-      <div class="puppy" data-id="{{id}}">
-        <img src="{{image_url}}" class="vote-image" />
-        <h4>{{name}}</h4>
-        <div class="vote-count"></div>
-      </div>
-    </script>
-
-    <script type="text/template" class="rank">
-      <div data-image="{{id}}">
-        <span>{{name}} | votes: {{votes}}</span>
-      </div>
+    <script type="script/template" id="myTemplate">
+      <div>{{firstName}} {{lastName}}</div>
     </script>
   </div>
-
-
 
   <!-- 3rd party scripts -->
   <script src="vendor/js/jquery-1.10.2.min.js"></script>
   <script src="vendor/js/robin.js"></script>
+
   <!-- Models -->
-  <script src="js/models/puppy.js"></script>
+  <script src="js/models/myModel.js"></script>
+
   <!-- Presenters -->
-  <script src="js/presenters/puppy-form.js"></script>
-  <script src="js/presenters/showcase.js"></script>
-  <script src="js/presenters/stats.js"></script>
 
 </body>
 </html>
