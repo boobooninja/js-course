@@ -58,6 +58,10 @@
         </div>
       </script>
 
+      <script type="text/template" id="scoreLine">
+        <div id="scoreLine">Name: {{= name }} Score: {{= score }}</div>
+      </script>
+
     </div>
 
     <!-- body goes here -->
@@ -90,6 +94,8 @@
         var scoresHTML = $('#templates #scores').html();
         var scoresTemplate = _.template(scoresHTML);
 
+        var scoreLineHTML = $('#templates #scoreLine').html();
+        var scoreLineTemplate = _.template(scoreLineHTML);
 
         var counter = -1;
         var score = 0;
@@ -276,8 +282,15 @@
 
         var ScoresView = Backbone.View.extend({
           template: scoresTemplate,
+          scoreLineTemplate: scoreLineTemplate,
           render: function() {
-            this.$el.html( this.template( quiz.getHighScores() ) );
+            var scores = quiz.getHighScores();
+            var str ="";
+            for (var i = 0; i < scores.length; i++) {
+              str += this.scoreLineTemplate( scores[i] );
+            }
+
+            this.$el.html( this.template( {scores: str} ) );
             return this;
           },
           events: {
@@ -296,78 +309,6 @@
       })();
 
       startView.render();
-
-      // $('#quiz').hide();
-      // $('#scores').hide();
-      // $('#newGame').hide();
-
-      // $(document).on('click', '#start', function(){
-      //   var user = $('#user').val();
-      //   quiz.startQuiz(user);
-      //   var question = quiz.nextQuestion();
-
-      //   $('#quiz').find('#question').text("Quesion: "+question.question);
-      //   $('#quiz').find('#answer').text("Answer: "+question.answer);
-      //   $('#quiz').find('#reason').text("Reason: "+question.reason);
-
-      //   $('.start').hide();
-      //   $('#quiz').show();
-      //   $('#question').show();
-      //   $('#answer').hide();
-      //   $('#reason').hide();
-      //   $('#buttonsTF').show();
-      //   $('#nextButton').hide();
-      // });
-
-      // $(document).on('click', '.answerButton', function(){
-      //   var value = $(this).data('value');
-      //   quiz.validate(value);
-
-      //   $('#answer').show();
-      //   $('#reason').show();
-      //   $('#buttonsTF').hide();
-
-      //   if (quiz.quizOver()) {
-      //     $('#score').text("Score: "+ quiz.getScore() +" / 10").show();
-      //     quiz.saveScore();
-
-      //     var scores = quiz.getHighScores();
-
-      //     var scoresHTML = "";
-      //     for (var i = 0; i < scores.length; i++) {
-      //       scoresHTML += ("<div>Name: "+scores[i].name+" - "+scores[i].score+"</div>");
-      //     }
-
-      //     $('#scores').html(scoresHTML);
-      //     $('#scores').show();
-      //     $('#newGame').show();
-      //   } else {
-      //     $('#nextButton').show();
-      //   }
-      // });
-
-      // $(document).on('click', '#newGameButton', function(){
-      //   $('.start').show();
-      //   $('#quiz').hide();
-      //   $('#score').hide();
-      //   $('#scores').hide();
-      //   $('#newGame').hide();
-      // });
-
-      // $(document).on('click', '#next', function(){
-      //   var question = quiz.nextQuestion();
-
-      //   $('#quiz').find('#question').text("Quesion: "+question.question);
-      //   $('#quiz').find('#answer').text("Answer: "+question.answer);
-      //   $('#quiz').find('#reason').text("Reason: "+question.reason);
-
-      //   $('#quiz').show();
-      //   $('#question').show();
-      //   $('#answer').hide();
-      //   $('#reason').hide();
-      //   $('#buttonsTF').show();
-      //   $('#nextButton').hide();
-      // });
 
     </script>
   </body>
