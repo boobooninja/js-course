@@ -15,29 +15,7 @@
       <div class="medium-12 large-12 column">
         <div class="panel">
           <h2>Quizzy</h2>
-          <div class="start">
-            <input type="text" id="user" placeholder="Input your name">
-            <button id="start">Start Quiz</button>
-          </div>
-          <div id="quiz">
-            <div id="question"></div>
-            <div id="answer"></div>
-            <div id="reason"></div>
-            <div id="score"></div>
-            <div id="buttonsTF">
-              <button class="answerButton" data-value=true>True</button>
-              <button class="answerButton" data-value=false>False</button>
-            </div>
-            <div id="nextButton">
-              <button id="next">Next</button>
-            </div>
-          </div>
-          <div id="scores">
-            <h3>Scores</h3>
-          </div>
-          <div id="newGame">
-            <button id="newGameButton">Play again</button>
-          </div>
+          <div id="main"></div>
         </div>
       </div>
     </div>
@@ -52,7 +30,7 @@
 
       <script type="text/template" id="quizQuestion">
         <div id="quiz">
-          <div id="question"></div>
+          <div id="question">Question: {{= question }}</div>
           <div id="buttonsTF">
             <button class="answerButton" data-value=true>True</button>
             <button class="answerButton" data-value=false>False</button>
@@ -62,17 +40,21 @@
 
       <script type="text/template" id="quizAnswer">
         <div id="quiz">
-          <div id="question"></div>
-          <div id="answer"></div>
-          <div id="reason"></div>
-          <div id="score"></div>
-          <div id="buttonsTF">
-            <button class="answerButton" data-value=true>True</button>
-            <button class="answerButton" data-value=false>False</button>
-          </div>
+          <div id="question">Question: {{= question }}</div>
+          <div id="answer">Answer: {{= answer }}</div>
+          <div id="reason">Reason: {{= reason }}</div>
+          <div id="score">Your Score: {{= score }}</div>
           <div id="nextButton">
             <button id="next">Next</button>
           </div>
+        </div>
+      </script>
+
+      <script type="text/template" id="scores">
+        <h3>Scores</h3>
+        <div id="scores">{{= scores }}</div>
+        <div id="newGame">
+          <button id="newGameButton">Play again</button>
         </div>
       </script>
 
@@ -96,9 +78,17 @@
         };
 
         // ----- Templates
-        var myTemplateHTML = $('#templates .my-cool-template').html()
-          , myTemplate = _.template(myTemplateHTML);
-        ;
+        var startHTML = $('#templates #start').html();
+        var startTemplate = _.template(startHTML);
+
+        var quizQuestionHTML = $('#templates #quizQuestion').html();
+        var quizQuestionTemplate = _.template(quizQuestionHTML);
+
+        var quizAnswerHTML = $('#templates #quizAnswer').html();
+        var quizAnswerTemplate = _.template(quizAnswerHTML);
+
+        var scoresHTML = $('#templates #scores').html();
+        var scoresTemplate = _.template(scoresHTML);
 
 
         var counter = -1;
@@ -162,6 +152,10 @@
           return questionList[counter];
         }
 
+        function currentQuestion() {
+          return questionList[counter];
+        }
+
         function startQuiz(user) {
           counter = -1;
           score = 0;
@@ -201,6 +195,7 @@
 
         window.quiz = {
           nextQuestion: nextQuestion,
+          currentQuestion: currentQuestion,
           startQuiz: startQuiz,
           getScore: getScore,
           validate: validate,
@@ -208,79 +203,171 @@
           getHighScores: getHighScores,
           saveScore: saveScore
         };
+
+        // ---- VIEW LAYER
+        var StartView = Backbone.View.extend({
+          template: startTemplate,
+          render: function() {
+            this.$el.html( this.template( {} ) );
+            return this;
+          },
+          events: {
+            "click #start": function() {
+              var user = this.$el.find("#user").val();
+              console.log(user);
+              quiz.startQuiz(user);
+              // render quiz question view
+              quizQuestionView.render();
+            }
+          }
+        });
+
+        window.startView = new StartView({
+          el: "#main"
+        });
+
+        var QuizQuestionView = Backbone.View.extend({
+          template: quizQuestionTemplate,
+          render: function() {
+            this.$el.html( this.template( quiz.nextQuestion() ) );
+            return this;
+          },
+          events: {
+            "click .answerButton": function(e) {
+              var value = $(e.currentTarget).data('value');
+              console.log(value);
+              quiz.validate(value);
+              // render answer view
+              quizAnswerView.render();
+            }
+          }
+        });
+
+        window.quizQuestionView = new QuizQuestionView({
+          el: "#main"
+        });
+
+        var QuizAnswerView = Backbone.View.extend({
+          template: quizAnswerTemplate,
+          render: function() {
+            var data = quiz.currentQuestion();
+            data.score = quiz.getScore();
+            this.$el.html( this.template( data ) );
+            return this;
+          },
+          events: {
+            "click #next": function(e) {
+
+              if (quiz.quizOver()) {
+                quiz.saveScore();
+                // render scores view
+                scoresView.render();
+              } else {
+                // render next question view
+                quizQuestionView.render();
+              }
+            }
+          }
+        });
+
+        window.quizAnswerView = new QuizAnswerView({
+          el: "#main"
+        });
+
+        var ScoresView = Backbone.View.extend({
+          template: scoresTemplate,
+          render: function() {
+            this.$el.html( this.template( quiz.getHighScores() ) );
+            return this;
+          },
+          events: {
+            "click #newGameButton": function() {
+              // render start view
+              startView.render();
+            }
+          }
+        });
+
+        window.scoresView = new ScoresView({
+          el: "#main"
+        });
+
+
       })();
 
-      $('#quiz').hide();
-      $('#scores').hide();
-      $('#newGame').hide();
+      startView.render();
 
-      $(document).on('click', '#start', function(){
-        var user = $('#user').val();
-        quiz.startQuiz(user);
-        var question = quiz.nextQuestion();
+      // $('#quiz').hide();
+      // $('#scores').hide();
+      // $('#newGame').hide();
 
-        $('#quiz').find('#question').text("Quesion: "+question.question);
-        $('#quiz').find('#answer').text("Answer: "+question.answer);
-        $('#quiz').find('#reason').text("Reason: "+question.reason);
+      // $(document).on('click', '#start', function(){
+      //   var user = $('#user').val();
+      //   quiz.startQuiz(user);
+      //   var question = quiz.nextQuestion();
 
-        $('.start').hide();
-        $('#quiz').show();
-        $('#question').show();
-        $('#answer').hide();
-        $('#reason').hide();
-        $('#buttonsTF').show();
-        $('#nextButton').hide();
-      });
+      //   $('#quiz').find('#question').text("Quesion: "+question.question);
+      //   $('#quiz').find('#answer').text("Answer: "+question.answer);
+      //   $('#quiz').find('#reason').text("Reason: "+question.reason);
 
-      $(document).on('click', '.answerButton', function(){
-        var value = $(this).data('value');
-        quiz.validate(value);
+      //   $('.start').hide();
+      //   $('#quiz').show();
+      //   $('#question').show();
+      //   $('#answer').hide();
+      //   $('#reason').hide();
+      //   $('#buttonsTF').show();
+      //   $('#nextButton').hide();
+      // });
 
-        $('#answer').show();
-        $('#reason').show();
-        $('#buttonsTF').hide();
+      // $(document).on('click', '.answerButton', function(){
+      //   var value = $(this).data('value');
+      //   quiz.validate(value);
 
-        if (quiz.quizOver()) {
-          $('#score').text("Score: "+ quiz.getScore() +" / 10").show();
-          quiz.saveScore();
+      //   $('#answer').show();
+      //   $('#reason').show();
+      //   $('#buttonsTF').hide();
 
-          var scores = quiz.getHighScores();
+      //   if (quiz.quizOver()) {
+      //     $('#score').text("Score: "+ quiz.getScore() +" / 10").show();
+      //     quiz.saveScore();
 
-          var scoresHTML = "";
-          for (var i = 0; i < scores.length; i++) {
-            scoresHTML += ("<div>Name: "+scores[i].name+" - "+scores[i].score+"</div>");
-          }
+      //     var scores = quiz.getHighScores();
 
-          $('#scores').html(scoresHTML);
-          $('#scores').show();
-          $('#newGame').show();
-        } else {
-          $('#nextButton').show();
-        }
-      });
+      //     var scoresHTML = "";
+      //     for (var i = 0; i < scores.length; i++) {
+      //       scoresHTML += ("<div>Name: "+scores[i].name+" - "+scores[i].score+"</div>");
+      //     }
 
-      $(document).on('click', '#newGameButton', function(){
-        $('.start').show();
-        $('#quiz').hide();
-        $('#score').hide();
-        $('#scores').hide();
-        $('#newGame').hide();
-      });
+      //     $('#scores').html(scoresHTML);
+      //     $('#scores').show();
+      //     $('#newGame').show();
+      //   } else {
+      //     $('#nextButton').show();
+      //   }
+      // });
 
-      $(document).on('click', '#next', function(){
-        var question = quiz.nextQuestion();
+      // $(document).on('click', '#newGameButton', function(){
+      //   $('.start').show();
+      //   $('#quiz').hide();
+      //   $('#score').hide();
+      //   $('#scores').hide();
+      //   $('#newGame').hide();
+      // });
 
-        $('#quiz').find('#question').text("Quesion: "+question.question);
-        $('#quiz').find('#answer').text("Answer: "+question.answer);
-        $('#quiz').find('#reason').text("Reason: "+question.reason);
+      // $(document).on('click', '#next', function(){
+      //   var question = quiz.nextQuestion();
 
-        $('#quiz').show();
-        $('#question').show();
-        $('#answer').hide();
-        $('#reason').hide();
-        $('#buttonsTF').show();
-        $('#nextButton').hide();
-      });
+      //   $('#quiz').find('#question').text("Quesion: "+question.question);
+      //   $('#quiz').find('#answer').text("Answer: "+question.answer);
+      //   $('#quiz').find('#reason').text("Reason: "+question.reason);
+
+      //   $('#quiz').show();
+      //   $('#question').show();
+      //   $('#answer').hide();
+      //   $('#reason').hide();
+      //   $('#buttonsTF').show();
+      //   $('#nextButton').hide();
+      // });
 
     </script>
   </body>
