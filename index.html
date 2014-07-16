@@ -24,8 +24,8 @@
             <div id="reason"></div>
             <div id="score"></div>
             <div id="buttonsTF">
-              <button id="true">True</button>
-              <button id="false">False</button>
+              <button class="answerButton" data-value=true>True</button>
+              <button class="answerButton" data-value=false>False</button>
             </div>
             <div id="nextButton">
               <button id="next">Next</button>
@@ -38,8 +38,6 @@
     <!-- body goes here -->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/foundation/5.3.0/js/foundation.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
     <script>
       (function() {
         $(document).foundation();
@@ -157,8 +155,9 @@
         $('#nextButton').hide();
       });
 
-      $(document).on('click', '#true', function(){
-        quiz.validate(true);
+      $(document).on('click', '.answerButton', function(){
+        var value = $(this).data('value');
+        quiz.validate(value);
 
         $('#answer').show();
         $('#reason').show();
@@ -166,20 +165,6 @@
 
         if (quiz.quizOver()) {
           $('#score').text("Score: "+ quiz.getScore() +" / 10").show();
-        } else {
-          $('#nextButton').show();
-        }
-      });
-
-      $(document).on('click', '#false', function(){
-        quiz.validate(false);
-
-        $('#answer').show();
-        $('#reason').show();
-        $('#buttonsTF').hide();
-
-        if (quiz.quizOver()) {
-          $('#score').text("Score: "+ quiz.getScore()).show();
         } else {
           $('#nextButton').show();
         }
