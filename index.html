@@ -97,9 +97,16 @@
         var scoreLineHTML = $('#templates #scoreLine').html();
         var scoreLineTemplate = _.template(scoreLineHTML);
 
+
+        if ( window.localStorage.getItem('quizzy') ) {
+          var store = JSON.parse( window.localStorage.getItem('quizzy') );
+        } else {
+          var store = { highScores: [] };
+          window.localStorage.setItem('quizzy', JSON.stringify( store ) );
+        }
+
         var counter = -1;
         var score = 0;
-        var highScores = [];
         var questionList = [
           { id: 1,
             question: "An acute angle is less than 90 degrees",
@@ -188,15 +195,20 @@
         }
 
         function getHighScores() {
-          return highScores.sort(
+          var store = JSON.parse( localStorage.getItem( 'quizzy') );
+          return store.highScores;
+        }
+
+        function saveScore() {
+          var store = JSON.parse( localStorage.getItem( 'quizzy') );
+          store.highScores.push( {name: quiz.user, score: quiz.getScore()} );
+          store.highScores.sort(
             function(a,b) {
               return (a.score > b.score) ? -1 : ((b.score > a.score) ? 1 : 0);
             }
           );
-        }
-
-        function saveScore() {
-          highScores.push( {name: quiz.user, score: quiz.getScore()} )
+          localStorage.setItem( 'quizzy', JSON.stringify(store) );
+          return store.highScores;
         }
 
         window.quiz = {
