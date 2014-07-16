@@ -16,6 +16,7 @@
         <div class="panel">
           <h2>Quizzy</h2>
           <div class="start">
+            <input type="text" id="user" placeholder="Input your name">
             <button id="start">Start Quiz</button>
           </div>
           <div id="quiz">
@@ -31,21 +32,78 @@
               <button id="next">Next</button>
             </div>
           </div>
+          <div id="scores">
+            <h3>Scores</h3>
+          </div>
+          <div id="newGame">
+            <button id="newGameButton">Play again</button>
+          </div>
         </div>
       </div>
+    </div>
+
+    <div id="templates">
+      <script type="text/template" id="start">
+        <div class="start">
+          <input type="text" id="user" placeholder="Input your name">
+          <button id="start">Start Quiz</button>
+        </div>
+      </script>
+
+      <script type="text/template" id="quizQuestion">
+        <div id="quiz">
+          <div id="question"></div>
+          <div id="buttonsTF">
+            <button class="answerButton" data-value=true>True</button>
+            <button class="answerButton" data-value=false>False</button>
+          </div>
+        </div>
+      </script>
+
+      <script type="text/template" id="quizAnswer">
+        <div id="quiz">
+          <div id="question"></div>
+          <div id="answer"></div>
+          <div id="reason"></div>
+          <div id="score"></div>
+          <div id="buttonsTF">
+            <button class="answerButton" data-value=true>True</button>
+            <button class="answerButton" data-value=false>False</button>
+          </div>
+          <div id="nextButton">
+            <button id="next">Next</button>
+          </div>
+        </div>
+      </script>
+
     </div>
 
     <!-- body goes here -->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/foundation/5.3.0/js/foundation.min.js"></script>
-    <script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
+    <script type="text/javascript">
       (function() {
         $(document).foundation();
       })();
 
       (function(){
+        _.templateSettings = {
+          evaluate    : /\{\{([\s\S]+?)\}\}/g,
+          interpolate : /\{\{=([\s\S]+?)\}\}/g,
+          escape      : /\{\{-([\s\S]+?)\}\}/g
+        };
+
+        // ----- Templates
+        var myTemplateHTML = $('#templates .my-cool-template').html()
+          , myTemplate = _.template(myTemplateHTML);
+        ;
+
+
         var counter = -1;
         var score = 0;
+        var highScores = [];
         var questionList = [
           { id: 1,
             question: "An acute angle is less than 90 degrees",
@@ -104,8 +162,10 @@
           return questionList[counter];
         }
 
-        function startQuiz() {
+        function startQuiz(user) {
           counter = -1;
+          score = 0;
+          this.user = user;
         }
 
         function getScore() {
@@ -120,11 +180,23 @@
         }
 
         function quizOver() {
-          if ( counter === questionList.length - 1 ) {
+          if ( counter >= questionList.length - 1 ) {
             return true;
           } else {
             return false;
           }
+        }
+
+        function getHighScores() {
+          return highScores.sort(
+            function(a,b) {
+              return (a.score > b.score) ? -1 : ((b.score > a.score) ? 1 : 0);
+            }
+          );
+        }
+
+        function saveScore() {
+          highScores.push( {name: quiz.user, score: quiz.getScore()} )
         }
 
         window.quiz = {
@@ -132,21 +204,26 @@
           startQuiz: startQuiz,
           getScore: getScore,
           validate: validate,
-          quizOver: quizOver
+          quizOver: quizOver,
+          getHighScores: getHighScores,
+          saveScore: saveScore
         };
       })();
 
       $('#quiz').hide();
+      $('#scores').hide();
+      $('#newGame').hide();
 
       $(document).on('click', '#start', function(){
-        quiz.startQuiz();
+        var user = $('#user').val();
+        quiz.startQuiz(user);
         var question = quiz.nextQuestion();
 
         $('#quiz').find('#question').text("Quesion: "+question.question);
         $('#quiz').find('#answer').text("Answer: "+question.answer);
         $('#quiz').find('#reason').text("Reason: "+question.reason);
 
-        $(this).hide();
+        $('.start').hide();
         $('#quiz').show();
         $('#question').show();
         $('#answer').hide();
@@ -165,9 +242,29 @@
 
         if (quiz.quizOver()) {
           $('#score').text("Score: "+ quiz.getScore() +" / 10").show();
+          quiz.saveScore();
+
+          var scores = quiz.getHighScores();
+
+          var scoresHTML = "";
+          for (var i = 0; i < scores.length; i++) {
+            scoresHTML += ("<div>Name: "+scores[i].name+" - "+scores[i].score+"</div>");
+          }
+
+          $('#scores').html(scoresHTML);
+          $('#scores').show();
+          $('#newGame').show();
         } else {
           $('#nextButton').show();
         }
+      });
+
+      $(document).on('click', '#newGameButton', function(){
+        $('.start').show();
+        $('#quiz').hide();
+        $('#score').hide();
+        $('#scores').hide();
+        $('#newGame').hide();
       });
 
       $(document).on('click', '#next', function(){
