@@ -24,8 +24,19 @@
       <script type="text/template" id="start">
         <div class="start">
           <input type="text" id="user" placeholder="Input your name">
-          <button id="start">Start Quiz</button>
+          <label>Select a quiz</label>
+          <div id="quizList">
+            <ul>
+              {{= quizList }}
+            </ul>
+          </div>
         </div>
+      </script>
+
+      <script type="text/template" id="quizListLine">
+        <li>
+          <a href="#" class="quizListLine" data-id="{{= id }}">{{= name }}</a>
+        </li>
       </script>
 
       <script type="text/template" id="quizQuestion">
@@ -75,6 +86,6 @@
     <script src="js/views/quizAnswer.js"></script>
     <script src="js/views/scores.js"></script>
     <script src="js/quizzy.js"></script>
-    <script src="lib/myapp.js"></script>
+
   </body>
 </html>

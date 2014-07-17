@@ -8,21 +8,21 @@
   var QuizAnswerView = Backbone.View.extend({
     template: quizAnswerTemplate,
     render: function() {
-      var data = quiz.currentQuestion();
-      data.score = quiz.getScore();
+      var data = App.currentQuestion();
+      data.score = App.getScore();
       this.$el.html( this.template( data ) );
       return this;
     },
     events: {
       "click #next": function(e) {
 
-        if (quiz.quizOver()) {
-          quiz.saveScore();
+        if (App.quizOver()) {
+          App.saveScore();
           // render scores view
-          scoresView.render();
+          window.scoresView.render();
         } else {
           // render next question view
-          quizQuestionView.render();
+          window.quizQuestionView.render();
         }
       }
     }

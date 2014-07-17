@@ -12,7 +12,7 @@
     template: scoresTemplate,
     scoreLineTemplate: scoreLineTemplate,
     render: function() {
-      var scores = quiz.getHighScores();
+      var scores = App.currentQuiz.highScores;
       var str ="";
       for (var i = 0; i < scores.length; i++) {
         str += this.scoreLineTemplate( scores[i] );
@@ -24,7 +24,7 @@
     events: {
       "click #newGameButton": function() {
         // render start view
-        startView.render();
+        window.startView.render();
       }
     }
   });

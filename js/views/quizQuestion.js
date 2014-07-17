@@ -8,16 +8,16 @@
   var QuizQuestionView = Backbone.View.extend({
     template: quizQuestionTemplate,
     render: function() {
-      this.$el.html( this.template( quiz.nextQuestion() ) );
+      this.$el.html( this.template( App.nextQuestion() ) );
       return this;
     },
     events: {
       "click .answerButton": function(e) {
         var value = $(e.currentTarget).data('value');
         console.log(value);
-        quiz.validate(value);
+        App.validate(value);
         // render answer view
-        quizAnswerView.render();
+        window.quizAnswerView.render();
       }
     }
   });
