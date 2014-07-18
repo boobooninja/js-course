@@ -28,6 +28,10 @@
       getQuiz: function(someID) {
         console.log(someID);
         return _.findWhere(this.getQuizzes(), {id: someID});
+      },
+      saveNewQuiz: function(data) {
+        this.get().quizzes.push( data );
+        this.put();
       }
     }
   };
@@ -105,6 +109,21 @@
     // return store.highScores;
   }
 
+  function createQuiz(data) {
+    data.id = this.quizList().length + 1;
+    this.currentQuiz = data;
+    console.log(this.currentQuiz);
+  }
+
+  function addQuestion(data) {
+    data.id = this.currentQuiz.questions.length + 1;
+    this.currentQuiz.questions.push(data);
+  }
+
+  function saveNewQuiz() {
+    this.store.saveNewQuiz( this.currentQuiz );
+  }
+
   window.App.quizList        = quizList;
   window.App.nextQuestion    = nextQuestion;
   window.App.currentQuestion = currentQuestion;
@@ -114,6 +133,9 @@
   window.App.quizOver        = quizOver;
   window.App.getHighScores   = getHighScores;
   window.App.saveScore       = saveScore;
+  window.App.createQuiz      = createQuiz;
+  window.App.addQuestion     = addQuestion;
+  window.App.saveNewQuiz     = saveNewQuiz;
 
 })();
 

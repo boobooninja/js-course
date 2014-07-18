@@ -7,17 +7,33 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/foundation/5.3.0/css/foundation.min.css" type="text/css" />
-    <script type="text/css">
-    </script>
+    <style>
+      .my-box {
+        overflow: hidden;
+      }
+      h2 {
+        text-align: center;
+        padding-bottom: 20px;
+      }
+    </style>
   </head>
   <body>
     <div class="row">
-      <div class="medium-12 large-12 column">
-        <div class="panel">
-          <h2>Quizzy</h2>
-          <div id="main"></div>
+      <h2>Quizzy</h2>
+      <div class="panel my-box" id="main-box">
+        <div class="medium-6 large-6 column">
+          <h3>Play</h3>
+          <div id="main">
+
+          </div>
+        </div>
+        <div class="medium-6 large-6 column">
+          <h3>Add a Quiz</h3>
+          <input type="text" id="name" placeholder="Name of the Quiz">
+          <a href="#" class="button" id="addQuiz">Create a Quiz</a>
         </div>
       </div>
+      <div class="my-box" id="form-box"></div>
     </div>
 
     <div id="templates">
@@ -72,6 +88,52 @@
       <script type="text/template" id="scoreLine">
         <div id="scoreLine">Name: {{= name }} Score: {{= score }}</div>
       </script>
+
+      <script type="text/template" id="createQuiz">
+        <div class="createQuiz">
+          <div class="panel">
+            <h2>Create Your Quiz</h2>
+            <div class="row">
+              <div class="medium-12 large-12 column">
+                <div>Author: {{= author }}</div>
+                <div>Quiz: {{= name }}</div>
+                <div id="questionList">{{= questionList }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="panel">
+            <h2>New Question</h2>
+            <div class="row">
+              <div class="medium-12 large-12 column">
+                <div id="questionListForm"></div>
+                <button id="submitQuiz">Submit Quiz</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </script>
+
+      <script type="text/template" id="addQuestion">
+        <div class="addQuestion">
+          <div class="row">
+            <div class="medium-12 large-12 column">
+              <label>Question:</label><input type="text" id="question">
+              <label>Answer:</label><input type="text" id="answer">
+              <label>Reason:</label><input type="text" id="reason">
+              <button id="submitQuestion">Submit Question</button>
+            </div>
+          </div>
+        </div>
+      </script>
+
+      <script type="text/template" id="showQuestion">
+        <div id="showQuestion">
+          <div id="question">Question: {{= question }}</div>
+          <div id="answer">Answer: {{= answer }}</div>
+          <div id="reason">Reason: {{= reason }}</div>
+        </div>
+      </script>
+
     </div>
 
     <!-- body goes here -->
@@ -85,6 +147,7 @@
     <script src="js/views/quizQuestion.js"></script>
     <script src="js/views/quizAnswer.js"></script>
     <script src="js/views/scores.js"></script>
+    <script src="js/views/createQuiz.js"></script>
     <script src="js/quizzy.js"></script>
 
   </body>

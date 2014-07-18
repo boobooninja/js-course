@@ -21,20 +21,6 @@
       this.$el.html( this.template( {quizList: str} ) );
       return this;
     }
-    // events: {
-    //   "click .quizListLine": function(e) {
-    //     e.preventDefault();
-
-    //     var user = this.$el.find("#user").val();
-    //     console.log(user);
-    //     console.log(e);
-    //     console.log(this);
-    //     window.someObj = e;
-    //     // quiz.startQuiz(user);
-    //     // render quiz question view
-    //     // quizQuestionView.render();
-    //   }
-    // }
   });
 
   window.startView = new StartView({
@@ -50,6 +36,22 @@
 
     App.startQuiz({user: user, quizID: quizID});
     window.quizQuestionView.render();
+  });
+
+  $(document).on('click', '#addQuiz', function(e){
+    e.preventDefault();
+    console.log('addQuiz');
+    var userName = $("#user").val();
+    var quizName = $("#name").val();
+
+    if (!userName || !quizName) {
+      App.error = "Your username and quiz name is required";
+      window.startView.render();
+    } else {
+      var newQuiz = {id: undefined, author: userName, name: quizName, highScores: [], questions: []};
+      App.createQuiz( newQuiz );
+      window.createQuizView.render();
+    }
   });
 
 })();
