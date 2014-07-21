@@ -14,5 +14,8 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require_tree .
-// 
+//
 // Your Quizzy code should go here.
+(function() {
+  $(document).foundation();
+})();

@@ -1,3 +1,154 @@
-<h2>Quizzy Quiz</h2>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Quizzy</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/foundation/5.3.0/css/foundation.min.css" type="text/css" />
+    <style>
+      .my-box {
+        overflow: hidden;
+      }
+      h2 {
+        text-align: center;
+        padding-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="row">
+      <h2>Quizzy</h2>
+      <div class="panel my-box" id="main-box">
+        <div class="medium-6 large-6 column">
+          <h3>Play</h3>
+          <div id="main">
 
-<p>Your single page app should go here.</p>
+          </div>
+        </div>
+        <div class="medium-6 large-6 column">
+          <h3>Add a Quiz</h3>
+          <input type="text" id="name" placeholder="Name of the Quiz">
+          <a href="#" class="button" id="addQuiz">Create a Quiz</a>
+        </div>
+      </div>
+      <div class="my-box" id="form-box"></div>
+    </div>
+
+    <div id="templates">
+      <script type="text/template" id="start">
+        <div class="start">
+          <input type="text" id="user" placeholder="Input your name">
+          <label>Select a quiz</label>
+          <div id="quizList">
+            <ul>
+              {{= quizList }}
+            </ul>
+          </div>
+        </div>
+      </script>
+
+      <script type="text/template" id="quizListLine">
+        <li>
+          <a href="#" class="quizListLine" data-id="{{= id }}">{{= name }}</a>
+        </li>
+      </script>
+
+      <script type="text/template" id="quizQuestion">
+        <div id="quiz">
+          <div id="question">Question: {{= question }}</div>
+          <div id="buttonsTF">
+            <button class="answerButton" data-value=true>True</button>
+            <button class="answerButton" data-value=false>False</button>
+          </div>
+        </div>
+      </script>
+
+      <script type="text/template" id="quizAnswer">
+        <div id="quiz">
+          <div id="question">Question: {{= question }}</div>
+          <div id="answer">Answer: {{= answer }}</div>
+          <div id="reason">Reason: {{= reason }}</div>
+          <div id="score">Your Score: {{= score }}</div>
+          <div id="nextButton">
+            <button id="next">Next</button>
+          </div>
+        </div>
+      </script>
+
+      <script type="text/template" id="scores">
+        <h3>Scores</h3>
+        <div id="scores">{{= scores }}</div>
+        <div id="newGame">
+          <button id="newGameButton">Play again</button>
+        </div>
+      </script>
+
+      <script type="text/template" id="scoreLine">
+        <div id="scoreLine">Name: {{= name }} Score: {{= score }}</div>
+      </script>
+
+      <script type="text/template" id="createQuiz">
+        <div class="createQuiz">
+          <div class="panel">
+            <h2>Create Your Quiz</h2>
+            <div class="row">
+              <div class="medium-12 large-12 column">
+                <div>Author: {{= author }}</div>
+                <div>Quiz: {{= name }}</div>
+                <div id="questionList">{{= questionList }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="panel">
+            <h2>New Question</h2>
+            <div class="row">
+              <div class="medium-12 large-12 column">
+                <div id="questionListForm"></div>
+                <button id="submitQuiz">Submit Quiz</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </script>
+
+      <script type="text/template" id="addQuestion">
+        <div class="addQuestion">
+          <div class="row">
+            <div class="medium-12 large-12 column">
+              <label>Question:</label><input type="text" id="question">
+              <label>Answer:</label><input type="text" id="answer">
+              <label>Reason:</label><input type="text" id="reason">
+              <button id="submitQuestion">Submit Question</button>
+            </div>
+          </div>
+        </div>
+      </script>
+
+      <script type="text/template" id="showQuestion">
+        <div id="showQuestion">
+          <div id="question">Question: {{= question }}</div>
+          <div id="answer">Answer: {{= answer }}</div>
+          <div id="reason">Reason: {{= reason }}</div>
+        </div>
+      </script>
+
+    </div>
+
+    <!-- body goes here -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/foundation/5.3.0/js/foundation.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
+    <script src="js/init.js"></script>
+    <script src="js/views/templateSettings.js"></script>
+    <script src="js/views/start.js"></script>
+    <script src="js/views/quizQuestion.js"></script>
+    <script src="js/views/quizAnswer.js"></script>
+    <script src="js/views/scores.js"></script>
+    <script src="js/views/createQuiz.js"></script>
+    <script src="js/quizzy.js"></script>
+
+  </body>
+</html>
