@@ -29,7 +29,7 @@
         </div>
         <div class="medium-6 large-6 column">
           <h3>Add a Quiz</h3>
-          <input type="text" id="name" placeholder="Name of the Quiz">
+          <input type="text" id="title" placeholder="Name of the Quiz">
           <a href="#" class="button" id="addQuiz">Create a Quiz</a>
         </div>
       </div>
@@ -51,7 +51,7 @@
 
       <script type="text/template" id="quizListLine">
         <li>
-          <a href="#" class="quizListLine" data-id="{{= id }}">{{= name }}</a>
+          <a href="#" class="quizListLine" data-id="{{= id }}">{{= title }}</a>
         </li>
       </script>
 
@@ -86,7 +86,7 @@
       </script>
 
       <script type="text/template" id="scoreLine">
-        <div id="scoreLine">Name: {{= name }} Score: {{= score }}</div>
+        <div id="scoreLine">Name: {{= user }} Score: {{= score }}</div>
       </script>
 
       <script type="text/template" id="createQuiz">
@@ -96,7 +96,7 @@
             <div class="row">
               <div class="medium-12 large-12 column">
                 <div>Author: {{= author }}</div>
-                <div>Quiz: {{= name }}</div>
+                <div>Quiz: {{= title }}</div>
                 <div id="questionList">{{= questionList }}</div>
               </div>
             </div>
@@ -136,19 +136,13 @@
 
     </div>
 
-    <!-- body goes here -->
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/foundation/5.3.0/js/foundation.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
-    <script src="js/init.js"></script>
-    <script src="js/views/templateSettings.js"></script>
-    <script src="js/views/start.js"></script>
-    <script src="js/views/quizQuestion.js"></script>
-    <script src="js/views/quizAnswer.js"></script>
-    <script src="js/views/scores.js"></script>
-    <script src="js/views/createQuiz.js"></script>
-    <script src="js/quizzy.js"></script>
-
+    <script type="text/javascript">
+      App.startView();
+      App.quizQuestionView();
+      App.quizAnswerView();
+      App.scoresView();
+      App.createQuizView();
+      startView.render();
+    </script>
   </body>
 </html>

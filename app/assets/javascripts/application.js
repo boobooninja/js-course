@@ -13,9 +13,19 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
-//= require_tree .
+
 //
 // Your Quizzy code should go here.
-(function() {
-  $(document).foundation();
-})();
+
+//= require vendors/foundation
+//= require vendors/underscore
+//= require vendors/backbone
+
+//= require init
+//= require quizzy
+//= require views/templateSettings
+//= require views/start
+//= require views/quizQuestion
+//= require views/quizAnswer
+//= require views/scores
+//= require views/createQuiz
