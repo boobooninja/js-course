@@ -2,40 +2,6 @@
 
   window.App = window.App || {};
 
-  // window.App.store = {
-  //   setCurrentQuiz: function(someID) {
-  //     window.App.currentQuiz = this.getQuiz(someID);
-  //   },
-  //   get: function() {
-  //     if ( this.data ) { return this.data; }
-  //     if ( window.localStorage.getItem('quizzy') ) {
-  //       this.data = JSON.parse( window.localStorage.getItem('quizzy') );
-  //     } else {
-  //       this.data = { highScores: [], quizzes: [] };
-  //       this.put();
-  //     }
-  //     return this.data;
-  //   },
-  //   put: function() {
-  //     if ( !this.data ) { this.get(); }
-  //     window.localStorage.setItem('quizzy', JSON.stringify( this.data ) );
-  //   },
-  //   getHighScores: function() {
-  //     return this.get().highScores;
-  //   },
-  //   getQuizzes: function() {
-  //     return this.get().quizzes;
-  //   },
-  //   getQuiz: function(someID) {
-  //     console.log(someID);
-  //     return _.findWhere(this.getQuizzes(), {id: someID});
-  //   },
-  //   saveNewQuiz: function(data) {
-  //     this.get().quizzes.push( data );
-  //     this.put();
-  //   }
-  // };
-
   window.App.store = {
     setCurrentQuiz: function(someID) {
       window.App.currentQuiz = this.getQuiz(someID);
@@ -65,6 +31,16 @@
         }
       });
     },
+    createQuiz: function(quiz, func){
+      $.ajax({
+        type: "POST",
+        url: "/quizzes",
+        data: quiz,
+        success: function(data){
+          func(data);
+        }
+      });
+    },
     saveNewQuiz: function(data) {
       this.get().quizzes.push( data );
       this.put();
@@ -80,6 +56,16 @@
     getQuestion: function(quizID, questionID, func){
       $.ajax({
         url: "/quizzes/" + quizID + "/questions/" + questionID,
+        success: function(data){
+          func(data);
+        }
+      });
+    },
+    createQuestion: function(quizID, question, func){
+      $.ajax({
+        type: "POST",
+        url: "/quizzes/" + quizID +"/questions",
+        data: question,
         success: function(data){
           func(data);
         }
@@ -108,8 +94,8 @@
   var counter = -1;
   var score = 0;
 
-  function quizList(func) {
-    this.store.getQuizzes(func);
+  function getQuizzes(callBack) {
+    this.store.getQuizzes(callBack);
   }
 
   function nextQuestion(questionID, callBack) {
@@ -126,9 +112,10 @@
   }
 
   function getQuestions(quizID, callBack){
+    var that = this;
     this.store.getQuestions(quizID, function(data){
       console.log('getQuestions', data);
-      window.App.currentQuiz.questions = data;
+      that.currentQuiz.questions = data;
       callBack(data);
     })
   }
@@ -140,14 +127,11 @@
     score = 0;
 
     this.user = data['user'];
-
+    var that = this;
     this.store.getQuiz(quizID, function(data){
-      console.log(data);
-      window.App.currentQuiz = data;
-      window.App.getQuestions(window.App.currentQuiz.id, function(questions){
-        window.App.currentQuiz.questions = questions;
-        callBack(window.App.currentQuiz);
-      });
+      console.log("getQuiz", data);
+      that.currentQuiz = data;
+      that.getQuestions(that.currentQuiz.id, callBack);
     });
   }
 
@@ -168,16 +152,6 @@
       }
       callBack(data);
     });
-
-    // var answer = this.currentQuiz.questions[counter].answer;
-    // var response;
-    // if (value === answer) {
-    //   score += 1;
-    //   response = {"correct": "true"};
-    // } else {
-    //   response = {"correct": "false"};
-    // }
-    // callBack(response);
   }
 
   function quizOver() {
@@ -189,7 +163,15 @@
   }
 
   function getHighScores(callBack) {
-    this.store.getHighScores(callBack);
+    this.store.getHighScores(function(data){
+      data.sort(
+        function(a,b) {
+          return (a.score > b.score) ? -1 : ((b.score > a.score) ? 1 : 0);
+        }
+      );
+
+      callBack(data);
+    });
   }
 
   function saveScore(callBack) {
@@ -200,36 +182,45 @@
     var scoreJSON = {score: {user: user, score: score}};
     console.log("saveScore", scoreJSON);
     this.store.saveScore(scoreJSON, callBack);
-
-    // var currentHighScores = this.currentQuiz.highScores;
-    // currentHighScores.push( {name: this.user, score: this.getScore()} );
-
-    // currentHighScores.sort(
-    //   function(a,b) {
-    //     return (a.score > b.score) ? -1 : ((b.score > a.score) ? 1 : 0);
-    //   }
-    // );
-
-    // this.store.put();
-    // return currentHighScores;
   }
 
-  function createQuiz(data) {
-    data.id = this.quizList().length + 1;
-    this.currentQuiz = data;
-    console.log(this.currentQuiz);
+  function createQuiz(title, callBack) {
+    var that = this;
+    var quizJSON = {quiz: {title: title}};
+
+    this.store.createQuiz(quizJSON, function(data){
+      console.log("createQuiz", data);
+      that.currentQuiz = data.entity;
+      that.currentQuiz.questions = [];
+      callBack(that.currentQuiz);
+    });
   }
 
-  function addQuestion(data) {
-    data.id = this.currentQuiz.questions.length + 1;
-    this.currentQuiz.questions.push(data);
+  function createQuestion(questionData, callBack) {
+    var quizID = this.currentQuiz.id;
+    var questionJSON = {
+      question: {
+        question: questionData.question,
+        answer: questionData.answer,
+        type: "boolean",
+        quiz_id: quizID
+      }
+    };
+    var that = this;
+    this.store.createQuestion(quizID, questionJSON, function(data){
+      console.log("createQuestion", data);
+      that.currentQuiz.questions.push(data.entity);
+      callBack(data.entity);
+    });
+    // data.id = this.currentQuiz.questions.length + 1;
+    // this.currentQuiz.questions.push(data);
   }
 
-  function saveNewQuiz() {
-    this.store.saveNewQuiz( this.currentQuiz );
-  }
+  // function saveNewQuiz() {
+  //   this.store.saveNewQuiz( this.currentQuiz );
+  // }
 
-  window.App.quizList        = quizList;
+  window.App.getQuizzes      = getQuizzes;
   window.App.getQuestions    = getQuestions;
   window.App.nextQuestion    = nextQuestion;
   window.App.currentQuestion = currentQuestion;
@@ -240,7 +231,7 @@
   window.App.getHighScores   = getHighScores;
   window.App.saveScore       = saveScore;
   window.App.createQuiz      = createQuiz;
-  window.App.addQuestion     = addQuestion;
-  window.App.saveNewQuiz     = saveNewQuiz;
+  window.App.createQuestion  = createQuestion;
+  // window.App.saveNewQuiz     = saveNewQuiz;
 
 })();

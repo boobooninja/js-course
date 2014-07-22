@@ -40,12 +40,14 @@ window.App.createQuizView = function(){
         var reason = this.$el.find('#questionListForm #reason').val();
         console.log(question);
         var newQuestion = {question: question, answer: answer, reason: reason};
-        App.addQuestion( newQuestion );
-        this.render();
+        var that = this;
+        App.createQuestion(newQuestion, function(data){
+          that.render();
+        });
       },
       "click #submitQuiz": function(e) {
         e.preventDefault();
-        App.saveNewQuiz();
+        // App.saveNewQuiz();
         this.$el.html('');
         startView.render();
       }

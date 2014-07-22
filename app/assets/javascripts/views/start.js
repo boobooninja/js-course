@@ -15,7 +15,7 @@ window.App.startView = function(){
     quizListLineTemplate: quizListLineTemplate,
     render: function() {
       var that = this;
-      var quizList = App.quizList(function(quizList){
+      App.getQuizzes(function(quizList){
         console.log(quizList);
         var str ="";
         for (var i = 0; i < quizList.length; i++) {
@@ -47,16 +47,17 @@ window.App.startView = function(){
   $(document).on('click', '#addQuiz', function(e){
     e.preventDefault();
     console.log('addQuiz');
-    var userName = $("#user").val();
-    var quizTitle = $("#title").val();
+    var user = $("#user").val();
+    var title = $("#title").val();
 
-    if (!userName || !quizTitle) {
+    if (!user || !title) {
       App.error = "Your username and quiz title is required";
       window.startView.render();
     } else {
-      var newQuiz = {id: undefined, author: userName, title: quizTitle, highScores: [], questions: []};
-      App.createQuiz( newQuiz );
-      window.createQuizView.render();
+      // var newQuiz = {id: undefined, author: userName, title: quizTitle, highScores: [], questions: []};
+      App.createQuiz(title, function(data){
+        window.createQuizView.render();
+      });
     }
   });
 
