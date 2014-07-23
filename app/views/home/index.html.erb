@@ -1,24 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Quizzy</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/foundation/5.3.0/css/foundation.min.css" type="text/css" />
-    <style>
-      .my-box {
-        overflow: hidden;
-      }
-      h2 {
-        text-align: center;
-        padding-bottom: 20px;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="row">
+    <div class="row panel">
+      <h2>Quizzy</h2>
+      <div class="row" id="app-view">
+      </div>
+    </div>
+
+<!--     <div class="row panel">
       <h2>Quizzy</h2>
       <div class="panel my-box" id="main-box">
         <div class="medium-6 large-6 column">
@@ -35,7 +21,7 @@
       </div>
       <div class="my-box" id="form-box"></div>
     </div>
-
+ -->
     <div id="templates">
       <script type="text/template" id="start">
         <div class="start">
@@ -136,12 +122,10 @@
     </div>
 
     <script type="text/javascript">
-      App.startView();
-      App.quizQuestionView();
-      App.quizAnswerView();
-      App.scoresView();
-      App.createQuizView();
-      startView.render();
+      // App.startView();
+      // App.quizQuestionView();
+      // App.quizAnswerView();
+      // App.scoresView();
+      // App.createQuizView();
+      // startView.render();
     </script>
-  </body>
-</html>

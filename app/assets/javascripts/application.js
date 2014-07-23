@@ -22,10 +22,15 @@
 //= require vendors/backbone
 
 //= require init
-//= require quizzy
+
+//= require models/quiz
+//= require models/question
+//= require models/score
+
 //= require views/templateSettings
-//= require views/start
-//= require views/quizQuestion
-//= require views/quizAnswer
-//= require views/scores
-//= require views/createQuiz
+
+//= require views/startView
+//= require views/quizViews
+//= require views/questionViews
+
+//= require quizzy
